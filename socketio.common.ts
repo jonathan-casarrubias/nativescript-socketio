@@ -1,3 +1,3 @@
-export class SocketIO{
+export class SocketIOCommon {
     
 }

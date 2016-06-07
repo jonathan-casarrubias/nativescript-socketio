@@ -1,13 +1,24 @@
 declare var io:any;
-import common = require('./socketio.common');
-import jsonHelper = require('./helpers/jsonHelper');
-import app = require("application");
+/**
+ * Import Required Libraries
+ */
+import { SocketIOCommon } from './socketio.common';
+import { JSONHelper } from './helpers/jsonHelper.android';
+/**
+ * Set Required Constants
+ */
 const Emitter = io.socket.emitter.Emitter;
-const IO = io.socket.client.IO;
-const Socket = io.socket.client.Socket;
-const Ack = io.socket.client.Ack;
-export class SocketIO extends common.SocketIO {
-    socket;
+const IO      = io.socket.client.IO;
+const Socket  = io.socket.client.Socket;
+const Ack     = io.socket.client.Ack;
+/**
+ * SocketIO Class for Android
+ */
+export class SocketIO extends SocketIOCommon {
+
+    private socket;
+    private jsonHelper: JSONHelper = new JSONHelper();
+
     constructor(...args: any[]) {
         super();
         switch (args.length) {
@@ -34,12 +45,12 @@ export class SocketIO extends common.SocketIO {
                     ack = null;
                 }
 
-                payload = payload.map(jsonHelper.deserialize);
+                payload = payload.map(this.jsonHelper.deserialize);
 
                 if (ack) {
                     let _ack = ack;
                     ack = function () {
-                        var args = Array.prototype.slice.call(arguments).map(jsonHelper.serialize);
+                        var args = Array.prototype.slice.call(arguments).map(this.jsonHelper.serialize);
                         _ack.call(args);
                     };
                     payload.push(ack);
@@ -62,11 +73,11 @@ export class SocketIO extends common.SocketIO {
             payload.push(ack);
             ack = null;
         }
-        payload = payload.map(jsonHelper.serialize);
+        payload = payload.map(this.jsonHelper.serialize);
         if (ack) {
             payload.push(new Ack({
                 call: (args) => {
-                    args = Array.prototype.slice.call(args).map(jsonHelper.deserialize);
+                    args = Array.prototype.slice.call(args).map(this.jsonHelper.deserialize);
                     ack.apply(null, args);
                 },
             }));
