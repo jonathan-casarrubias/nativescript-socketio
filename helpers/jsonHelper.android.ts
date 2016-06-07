@@ -1,5 +1,7 @@
 'use strict'
 
+let org: any;
+
 const JSONObject = org.json.JSONObject;
 const JSONArray = org.json.JSONArray;
 const JSONException = org.json.JSONException;
@@ -29,7 +31,7 @@ export class JSONHelper {
 				store = new JSONObject();
 				Object.keys(value).forEach((key) => {
 					let item = value[key];
-					store.put(key, serialize(item));
+					store.put(key, this.serialize(item));
 				})
 				return store;
 			default: return null;
@@ -53,7 +55,7 @@ export class JSONHelper {
 			case 'org.json.JSONArray':
 				store = new Array();
 				for (let i = 0; i < value.length(); i++) {
-					store[i] = deserialize(value.get(i));
+					store[i] = this.deserialize(value.get(i));
 				}
 				break;
 			case 'org.json.JSONObject':
@@ -61,7 +63,7 @@ export class JSONHelper {
 				let i = value.keys();
 				while (i.hasNext()) {
 					let key = i.next();
-					store[key] = deserialize(value.get(key))
+					store[key] = this.deserialize(value.get(key))
 				}
 				break;
 			default:
