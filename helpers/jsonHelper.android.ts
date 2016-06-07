@@ -1,6 +1,6 @@
 'use strict'
 
-let org: any;
+declare var org:any;
 
 const JSONObject = org.json.JSONObject;
 const JSONArray = org.json.JSONArray;
